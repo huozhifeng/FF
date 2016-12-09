@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table td, table th {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+<button id="mybutton" onclick="set(oTable,iCol)">设置表格</button>
+<table width="300px" cellspacing="0" cellpadding="0" id="list">
+    <tr>
+        <th>名称</th>
+        <th>数量</th>
+        <th>价格</th>
+        <th>评价</th>
+        <th>产品详情</th>
+    </tr>
+    <tr>
+        <td>苹果</td>
+        <td>2</td>
+        <td>15￥</td>
+        <td>5</td>
+        <td>********</td>
+    </tr>
+    <tr>
+        <td>三星</td>
+        <td>5</td>
+        <td>100￥</td>
+        <td>5</td>
+        <td>********</td>
+    </tr>
+    <tr>
+        <td>小米</td>
+        <td>1</td>
+        <td>150￥</td>
+        <td>5</td>
+        <td>********</td>
+    </tr>
+</table>
+</body>
+<script src="js/jquery-1.7.1.js"></script>
+<script type="text/javascript">
+    var oTable=document.getElementById("list");
+    var iCol=0;
+    function set(oTable, iCol) {
+        for (var i = 0; i < oTable.rows.length; i++) {
+            for(var j=0;j<iCol.length;j++){
+                oTable.rows[i].cells[iCol].style.display = "none";
+            }
+        }
+    }
+</script>
+</html>

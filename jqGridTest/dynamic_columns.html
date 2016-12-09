@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="jqgrid/css/ui.jqgrid.css">
+    <link rel="stylesheet" href="jqgrid/css/css/redmond/jquery-ui-1.8.16.custom.css" />
+</head>
+<body>
+<button id="mybutton">设置表格</button>
+<table id="list"></table>
+<div id="pager"></div>
+<!--<a href="javascript:void(0)" id="hc">Hide column Tax</a>
+<br/>
+<a href="javascript:void(0)" id="sc">Show column Tax</a>-->
+</body>
+<script src="js/jquery-1.7.1.js"></script>
+<script src="jqgrid/js/jquery.jqGrid.src.js"></script>
+<script type="text/javascript" src="jqgrid/js/i18n/grid.locale-cn.js"></script>
+<script src="jqgrid/js/grid.setcolumns.js"></script>
+<script type="text/javascript">
+    $(function () {
+        pageInit();
+    });
+    function pageInit() {
+        $("#list").jqGrid(
+                {
+                    url: 'data/JSONData.json',
+                    datatype: "json",
+                    colNames: ['Inv No', 'Date', 'Client', 'Amount', 'Tax', 'Total', 'Notes'],
+                    colModel: [
+                        {name: 'id', index: 'id', width: 55},
+                        {name: 'invdate', index: 'invdate', width: 90},
+                        {name: 'name', index: 'name asc, invdate', width: 100},
+                        {name: 'amount', index: 'amount', width: 80, align: "right"},
+                        {name: 'tax', index: 'tax', width: 80, align: "right"},
+                        {name: 'total', index: 'total', width: 80, align: "right"},
+                        {name: 'note', index: 'note', width: 150, sortable: false}
+                    ],
+                    rowNum: 10,
+                    rowList: [10, 20, 30],
+                    pager: '#pager',
+                    sortname: 'id',
+                    viewrecords: true,
+                    sortorder: "desc",
+                    caption: "Dynamic hide/show columns"
+                });
+        $("#list").jqGrid('navGrid', "#pager", {
+            edit: false,
+            add: false,
+            del: false
+        });
+       /* $("#hc").click(function () {
+            $("#list").jqGrid('hideCol', "tax");
+        });
+        $("#sc").click(function () {
+            $("#list").jqGrid('showCol', "tax");
+        });*/
+    }
+    $("#mybutton").click(function() {
+        $("#list").setColumns({
+            top : 20,
+            left: 300,
+            width: 200,
+            height: 'auto',
+            dataheight: '150',
+            modal: false,
+            drag: true,
+            beforeShowForm: null,
+            afterShowForm: null,
+            afterSubmitForm: null,
+            closeOnEscape : true,
+            ShrinkToFit : false,
+            jqModal : false,
+            saveicon: [true,"left","ui-icon-disk"],
+            closeicon: [true,"left","ui-icon-close"],
+            onClose : null,
+            colnameview : true,
+            closeAfterSubmit : false,
+            recreateForm : false,
+            col : {
+                caption: "Show/Hide Columns",
+                bSubmit: "Submit",
+                bCancel: "Cancel"
+            }
+        });
+        return false;
+    });
+   /* $.jgrid = {
+        col : {
+            caption: "Show/Hide Columns",
+            bSubmit: "Submit",
+            bCancel: "Cancel"
+        }
+    }*/
+</script>
+</html>
