@@ -1,0 +1,115 @@
+## r.js
+
+Snandy
+If you cannot hear the sound of the genuine in you, you will all of your life spend your days on the ends of strings that somebody else pulls.
+
+RequireJS进阶（一）
+
+为了应对日益复杂，大规模的JavaScript开发。我们化整为零，化繁为简。将复杂的逻辑划分一个个小单元，各个击破。这时一个项目可能会有几十个甚至上百个JS文件，每个文件为一个模块单元。如果上线时都是这些小文件，那将对性能造成一定影响。
+
+
+
+RequireJS提供了一个打包压缩工具r.js来对模块进行合并压缩。r.js非常强大，不但可以压缩js，css，甚至可以对整个项目进行打包。
+
+r.js的压缩工具使用UglifyJS或Closure Compiler。默认使用UglifyJS（jQuery也是使用它压缩）。此外r.js需要node.js环境，当然它也可以运行在Java环境中如Rhino。
+
+
+
+这篇以一个简单的示例来感受下r.js，创建的目录如下
+
+
+
+和入门之三目录结构一样，写了三个模块cache，event，selector。这三个模块的代码就不在贴了。main.js也未做修改，实现的功能仍然是为页面上的所有段落P元素添加个点击事件，点击后弹出P的innerHTML。唯一的区别是目录中多了个r.js。
+
+
+
+index.html做了修改，如下
+
+<!doctype html>
+<html>
+    <head>
+        <title>requirejs进阶（一）</title>
+        <meta charset="utf-8"/>
+        <style type="text/css">
+            p {
+                background: #999;
+                width: 200px;
+            }
+        </style>
+    </head>
+    <body>
+        <p>p1</p><p>p2</p><p>p3</p><p>p4</p><p>p5</p>
+        <script data-main="built" src="require.js"></script>
+    </body>
+</html>
+注意，data-main改为了“built”，上一篇的是“main”。我们将使用r.js把js目录下的cache.js，event.js，selector.js，main.js合并压缩后写到r4目录中。
+
+
+
+好，让我们开始合并压缩吧。
+
+1，打开windows命令窗口，cd到r4目录中
+
+
+
+
+
+2，输入命令
+
+node r.js -o baseUrl=js name=main out=built.js
+
+
+命令行信息可以看到已经将各个js文件合并成功了。这时回到r4目录会发现多了一个built.js文件。
+
+
+好了，合并压缩过程完成了。
+
+
+把目录r4放到apache或其它web服务器上，访问index.html。网络请求如下
+
+
+可以看到除了require.js，就只有built.js了。大大减少了JS文件的http请求。这时点击页面上各个P元素，会弹出对应的innerHTML
+
+
+这说明功能完损无缺。
+
+
+下面对命令行做个简单解释。
+node r.js -o baseUrl=js name=main out=built.js
+
+-o         表示优化，该参数是固定的，必选。
+baseUrl  指存放模块的根目录，这里是r4/js，因为cd到r4中了，只需设置为js。可选，如果没有设置将从r4中查找main.js。
+name     模块的入口文件，这里设置成“main”，那么r.js会从baseUrl+main去查找。这里实际是r4/js/main.js。r.js会分析main.js，找出其所依赖的所有其它模块，然后合并压缩。
+out        指合并压缩后输出的文件路径，这里直接是built.js，那么将输出到根目录r4下。
+
+
+好了，再介绍两个参数
+
+1，excludeShallow 合并时将排除该文件
+
+node r.js -o baseUrl=js name=main out=built.js excludeShallow=selector
+
+
+
+
+
+可以看到输出信息中不再包括selector.js。这时运行index.html页面，会发现selector.js被单独请求下来了。
+
+
+
+
+
+2，optimize (none/uglify/closure)  指定是否压缩，默认为uglify
+不传该参数时r.js默认以UglifyJS压缩。设置为none则不会压缩，仅合并，这在开发阶段是很用用的。
+node r.js -o baseUrl=js name=main out=built.js optimize=none
+
+
+
+这时生成的built.js是没有压缩的。
+
+
+
+总结：
+这篇演示了采用模块开发后上线前的一个小示例：把所有模块文件合并为一个文件。
+
+先下载r.js放到开发目录中，然后使用命令行来合并压缩。其中演示了命令行参数-o、baseUrl、name、out及excludeShallow、optimize的使用。-o、name、out是必选的，其它为可选。
